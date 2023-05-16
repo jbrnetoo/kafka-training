@@ -1,22 +1,26 @@
 ﻿using Confluent.Kafka;
 using System;
 using System.Threading;
-using System.Threading.Tasks;
 
-namespace Estudos_Kafka
+namespace Estudos_Kafka_Consumer
 {
-    public static class FraudDetectorService
+    public class Program
     {
-        private const string _nomeTopico = "LOJA_NOVO_PEDIDO";
+        private const string _nomeTopico = "ECOMMERCE_NEW_ORDER";
 
-        public static async Task ConsumirMensagemDeTopico()
+        static void Main(string[] args)
+        {
+            ConsumirMensagemDeTopico();
+        }
+
+        public static void ConsumirMensagemDeTopico()
         {
             try
             {
                 var config = new ConsumerConfig()
                 {
                     BootstrapServers = "localhost:9092",
-                    GroupId = $"{typeof(FraudDetectorService).Name}-group-0",
+                    GroupId = "fraudDetectorService-group-0",
                     AutoOffsetReset = AutoOffsetReset.Earliest
                 };
 
@@ -48,41 +52,6 @@ namespace Estudos_Kafka
                 Console.WriteLine(ex.Message);
                 Console.WriteLine(ex.InnerException?.Message);
                 Console.WriteLine(ex.StackTrace);
-            }
-        }
-
-        public static async Task PublicarMensagemEmTopico()
-        {
-            try
-            {
-                var config = new ProducerConfig()
-                {
-                    BootstrapServers = "localhost:9092"
-                };
-
-                using (var producer = new ProducerBuilder<Null, string>(config).Build())
-                {
-                    for (int i = 1; i <= 3; i++)
-                    {
-                        var result = await producer.ProduceAsync(
-                            _nomeTopico,
-                            new Message<Null, string>
-                            {
-                                Value = $"Novo Pedido {i}"
-                            });
-
-                        Console.WriteLine(
-                            $"Mensagem: Novo Pedido {i} | " +
-                            $"Status: { result.Status }");
-                    }
-                }
-
-                Console.WriteLine("Concluído o envio de mensagens");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Exceção: {ex.GetType().FullName} | " +
-                             $"Mensagem: {ex.Message}");
             }
         }
     }

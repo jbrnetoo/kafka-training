@@ -1,17 +1,18 @@
 ﻿using Confluent.Kafka;
+using Streaming.Joao;
 using System;
 using System.Threading.Tasks;
 
-namespace Estudos_Kafka
+namespace Estudos_Kafka_Producer
 {
     public class NewOrderMain
     {
-        public static void Main()
+        public static async Task Main()
         {
             try
             {
-                using var orderDispatcher = new KafkaDispatcher<Order>();
-                using var emailDispatcher = new KafkaDispatcher<string>();
+                var orderDispatcher = new KafkaDispatcher<Order>();
+                var emailDispatcher = new KafkaDispatcher<string>();
 
                 for (int i = 0; i < 10; i++)
                 {
@@ -19,13 +20,20 @@ namespace Estudos_Kafka
 
                     var userId = Guid.NewGuid().ToString();
                     var orderId = Guid.NewGuid().ToString();
-                    var amount = new decimal(num * 5000);
+                    var amount = Convert.ToDouble(num * 5000);
 
-                    var order = new Order(userId, orderId, amount);
-                    orderDispatcher.Send("ECOMMERCE_NEW_ORDER", userId, order);
+                    var order = new Order()
+                    {
+                        userId = userId,
+                        orderId = orderId,
+                        amount = amount,
+                    };
+
+                    await orderDispatcher.Send("ECOMMERCE_NEW_ORDER", userId, order);
 
                     var email = "Thank you for your order! We are processing your order!";
-                    emailDispatcher.Send("ECOMMERCE_NEW_ORDER", userId, email);
+
+                    await emailDispatcher.Send("ECOMMERCE_SEND_EMAIL", userId, email);
                 }
             }
             catch (ProduceException<Null, string> e)

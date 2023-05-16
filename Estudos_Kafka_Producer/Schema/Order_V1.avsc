@@ -1,0 +1,27 @@
+﻿{
+	"title": "ECOMMERCE_NEW_ORDER",
+	"description": "This is an Scheme for making orders",
+	"type": "record",
+	"name": "Order",
+	"namespace": "Streaming.Joao",
+	"fields": [
+		{
+			"name": "userId",
+			"type": [ "null", "string" ],
+			"defalut": null,
+			"doc": "unique identifier of the user"
+		},
+		{
+			"name": "orderId",
+			"type": [ "null", "string" ],
+			"defalut": null,
+			"doc": "unique identifier of the order"
+		},
+		{
+			"name": "amount",
+			"type": [ "null", "double" ],
+			"defalut": null,
+			"doc": "total value of the order"
+		}
+	]
+}

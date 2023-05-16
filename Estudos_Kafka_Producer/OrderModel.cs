@@ -1,11 +1,11 @@
-﻿namespace Estudos_Kafka
+﻿namespace Estudos_Kafka_Producer
 {
-    public class Order
+    public class OrderModel
     {
         private readonly string userId, orderId;
-        private readonly decimal amount;
+        private readonly double amount;
 
-        public Order(string userId, string orderId, decimal amount)
+        public OrderModel(string userId, string orderId, double amount)
         {
             this.userId = userId;
             this.orderId = orderId;
