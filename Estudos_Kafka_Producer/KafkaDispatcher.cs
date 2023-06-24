@@ -1,6 +1,7 @@
 ﻿using Confluent.Kafka;
 using Confluent.SchemaRegistry;
 using Confluent.SchemaRegistry.Serdes;
+using Estudos_Kafka_Producer.Serializer;
 using System;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +18,8 @@ namespace Estudos_Kafka_Producer
 
                 using var producer = new ProducerBuilder<string, T>(Properties())
                   .SetKeySerializer(new AvroSerializer<string>(schemaRegistry))
-                  .SetValueSerializer(new AvroSerializer<T>(schemaRegistry))
+                  //.SetValueSerializer(new AvroSerializer<T>(schemaRegistry))
+                  .SetValueSerializer(new Serializer<T>())
                   .Build();
 
                 var headers = new Headers { new Header("x-app", Encoding.ASCII.GetBytes("chatbot")) };
@@ -38,7 +40,8 @@ namespace Estudos_Kafka_Producer
 
         private static ProducerConfig Properties() => new()
         {
-            BootstrapServers = "localhost:9092"
+            BootstrapServers = "localhost:9092",
+            Acks = Acks.Leader
         };
 
         private static SchemaRegistryConfig GetSchemeRegistryConfig() => new()

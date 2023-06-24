@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka;
+using Streaming.Joao;
 using System;
 using System.Threading;
 
@@ -31,7 +32,9 @@ namespace Estudos_Kafka_Consumer
                     cts.Cancel();
                 };
 
-                using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
+                using (var consumer = new ConsumerBuilder<string, Order>(config)
+                    .SetValueDeserializer(new Deserializer<Order>())
+                    .Build())
                 {
                     consumer.Subscribe(_nomeTopico);
 
@@ -41,7 +44,7 @@ namespace Estudos_Kafka_Consumer
                         Console.WriteLine("------------------------------------------");
                         Console.WriteLine($"Processing new order, checking for fraud");
                         Console.WriteLine($"{record.Message.Key}");
-                        Console.WriteLine($"{record.Message.Value}");
+                        Console.WriteLine($"OrderId: {record.Message.Value.orderId}, UserId: {record.Message.Value.userId}, Amount: {record.Message.Value.amount}");
                         Console.WriteLine($"{record.Partition}");
                         Console.WriteLine($"{record.Offset}\n");
                     }
