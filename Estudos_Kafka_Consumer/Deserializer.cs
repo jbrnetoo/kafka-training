@@ -15,8 +15,7 @@ namespace Estudos_Kafka_Consumer
             using var streamReader = new StreamReader(zip);
             var json = streamReader.ReadToEnd();
 
-            // Testando GitHub Actions
-           // return JsonSerializer.Deserialize<T>(json);
+            return JsonSerializer.Deserialize<T>(json);
         }
     }
 }
