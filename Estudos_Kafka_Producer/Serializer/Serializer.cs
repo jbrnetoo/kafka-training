@@ -17,7 +17,7 @@ namespace Estudos_Kafka_Producer.Serializer
             zipStream.Close();
             var buffer = memoryStream.ToArray();
 
-            return buffer;
+            //return buffer;
         }
     }
 }
